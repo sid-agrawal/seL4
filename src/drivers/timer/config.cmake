@@ -67,7 +67,7 @@ config_option(
     frequency registers of the generic timer. \
     WARNING: selecting this option opens a timing \
     channel"
-    DEFAULT OFF
+    DEFAULT ON
     DEPENDS "KernelArmHaveGenericTimer"
 )
 
@@ -87,7 +87,7 @@ config_option(
     WARNING: selecting this option opens a storage channel and allows threads to easily \
     corrupt these registers for each other, this should only be used for \
     debugging / development purposes"
-    DEFAULT OFF
+    DEFAULT ON
     DEPENDS "KernelArmHaveGenericTimer"
 )
 

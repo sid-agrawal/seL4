@@ -652,6 +652,7 @@ BOOT_CODE VISIBLE void init_kernel(
         UNREACHABLE();
     }
 
+    enablePMUToEL0();
 #ifdef CONFIG_KERNEL_MCS
     NODE_STATE(ksCurTime) = getCurrentTime();
     NODE_STATE(ksConsumed) = 0;
@@ -659,3 +660,4 @@ BOOT_CODE VISIBLE void init_kernel(
     schedule();
     activateThread();
 }
+

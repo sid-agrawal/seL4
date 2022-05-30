@@ -376,3 +376,6 @@ void arch_clean_invalidate_caches(void);
 void arch_clean_invalidate_L1_caches(word_t type);
 
 
+static inline void enablePMUToEL0(void){
+    MSR("PMUSERENR_EL0", 1);
+}
