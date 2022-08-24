@@ -8,10 +8,10 @@
 / {
 	chosen {
 		seL4,elfloader-devices =
-		    "serial1";
+		    "serial0";
 
 		seL4,kernel-devices =
-		    "serial1",
+		    "serial0",
 		    &{/soc/interrupt-controller@40041000},
 		    &{/soc/local_intc@40000000},
 		    &{/timer};
