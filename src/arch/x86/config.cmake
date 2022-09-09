@@ -278,7 +278,7 @@ config_option(
     are counting. Nevertheless whilst this is useful for
     evalulating performance this option opens timing and covert
     channels."
-    DEFAULT OFF
+    DEFAULT ON
     DEPENDS "KernelArchX86;NOT KernelVerificationBuild"
 )
 
