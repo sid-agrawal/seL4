@@ -10,6 +10,8 @@
 #include <sel4/types.h>
 #include <sel4/syscalls.h>
 
+#define __thread
+
 extern __thread seL4_IPCBuffer *__sel4_ipc_buffer;
 
 #ifdef CONFIG_KERNEL_INVOCATION_REPORT_ERROR_IPC
