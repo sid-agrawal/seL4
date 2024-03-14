@@ -633,6 +633,34 @@
             </error>
         </method>
 
+        <method id="TCBGetAffinity" name="GetAffinity" manual_name="Get CPU Affinity" manual_label="tcb_getaffinity">
+            <condition>
+                <and>
+                    <not><config var="CONFIG_KERNEL_MCS"/></not>
+                    <config var="CONFIG_ENABLE_SMP_SUPPORT"/>
+                </and>
+            </condition>
+            <brief>
+                Retrieve a thread's current CPU in multicore machine
+            </brief>
+            <description>
+                <docref>See <autoref label="sec:thread_creation"/></docref>
+            </description>
+            <param dir="out" name="affinity" type="seL4_Word"
+                description="The affinity of the given TCB"/>
+            <error name="seL4_IllegalOperation">
+                <description>
+                    The <texttt text="_service"/> is a CPtr to a capability of the wrong type.
+                    Or, <texttt text="affinity"/> is not a valid CPU number.
+                </description>
+            </error>
+            <error name="seL4_InvalidCapability">
+                <description>
+                    The <texttt text="_service"/> is a CPtr to a capability of the wrong type.
+                </description>
+            </error>
+        </method>
+
         <method id="TCBSetBreakpoint" name="SetBreakpoint" manual_name="Set Breakpoint" manual_label="tcb_setbreakpoint">
             <condition><config var="CONFIG_HARDWARE_DEBUG_API"/></condition>
             <brief>
