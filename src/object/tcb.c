@@ -515,6 +515,14 @@ static exception_t decodeSetAffinity(cap_t cap, word_t length, word_t *buffer)
     setThreadState(NODE_STATE(ksCurThread), ThreadState_Restart);
     return invokeTCB_SetAffinity(tcb, affinity);
 }
+
+static exception_t invokeTCB_GetAffinity(tcb_t *thread)
+{
+    setRegister(thread, msgRegisters[0], thread->tcbAffinity);
+
+    return EXCEPTION_NONE;
+}
+
 #endif
 #endif /* ENABLE_SMP_SUPPORT */
 
@@ -856,6 +864,10 @@ exception_t decodeTCBInvocation(word_t invLabel, word_t length, cap_t cap,
 #ifdef ENABLE_SMP_SUPPORT
     case TCBSetAffinity:
         return decodeSetAffinity(cap, length, buffer);
+
+    case TCBGetAffinity:
+        setThreadState(NODE_STATE(ksCurThread), ThreadState_Restart);
+        return invokeTCB_GetAffinity(TCB_PTR(cap_thread_cap_get_capTCBPtr(cap)));
 #endif /* ENABLE_SMP_SUPPORT */
 #endif
 
