@@ -712,18 +712,14 @@ static pte_t makeUserPagePTE(paddr_t paddr, vm_rights_t vm_rights, vm_attributes
 
 exception_t handleVMFault(tcb_t *thread, vm_fault_type_t vm_faultType)
 {
-#ifdef CONFIG_PLAT_QEMU_ARM_VIRT
-    printf("Page fault in thread at PC %p\n", (void *) getRestartPC(thread));
-#endif
+    printf("Page fault in thread at PC %p\n", (void *)getRestartPC(thread));
     switch (vm_faultType) {
     case ARMDataAbort: {
         word_t addr, fault;
 
         addr = getFAR();
         fault = getDFSR();
-#ifdef CONFIG_PLAT_QEMU_ARM_VIRT
         printf("ARMDataAbort addr %p\n", (void *)addr);
-#endif
 #ifdef CONFIG_ARM_HYPERVISOR_SUPPORT
         /* use the IPA */
         if (ARCH_NODE_STATE(armHSVCPUActive)) {
@@ -739,9 +735,7 @@ exception_t handleVMFault(tcb_t *thread, vm_fault_type_t vm_faultType)
 
         pc = getRestartPC(thread);
         fault = getIFSR();
-#ifdef CONFIG_PLAT_QEMU_ARM_VIRT
         printf("ARMPrefetchAbort PC %p\n", (void *)pc);
-#endif
 #ifdef CONFIG_ARM_HYPERVISOR_SUPPORT
         if (ARCH_NODE_STATE(armHSVCPUActive)) {
             pc = GET_PAR_ADDR(addressTranslateS1(pc)) | (pc & MASK(PAGE_BITS));
