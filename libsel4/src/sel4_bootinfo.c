@@ -13,6 +13,9 @@ __thread char __sel4_print_error = CONFIG_LIB_SEL4_PRINT_INVOCATION_ERRORS;
 /** Userland per-thread IPC buffer address **/
 __thread seL4_IPCBuffer *__sel4_ipc_buffer;
 
+/** Userland per-thread OSmosis data address */
+__thread void *__sel4gpi_osm_data;
+
 /** Consider moving bootinfo into libsel4_startup */
 seL4_BootInfo *bootinfo;
 
