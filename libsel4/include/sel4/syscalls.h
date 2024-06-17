@@ -102,10 +102,10 @@ LIBSEL4_INLINE_FUNC seL4_Uint32
 seL4_DebugCapIdentify(seL4_CPtr cap);
 
 /**
- * @xmlonly <manual name="Cap Paddr" label="sel4_debugcappaddr"/> @endxmlonly
+ * @xmlonly <manual name="Cap Paddr" label="sel4_cappaddr"/> @endxmlonly
  * @brief Identify the physical address of a capability in the current cspace.
  *
- * This debugging system call returns the physical address of capability in a 
+ * Returns the physical address of capability in a
  * capability slot in the current cspace. If the capability does not represent
  * physical memory, returns 0.
  *
@@ -114,7 +114,7 @@ seL4_DebugCapIdentify(seL4_CPtr cap);
  *
  */
 LIBSEL4_INLINE_FUNC seL4_Word
-seL4_DebugCapPaddr(seL4_CPtr cap);
+seL4_GetCapPaddr(seL4_CPtr cap);
 
 /**
  * @xmlonly <manual name="Cap Is Last Copy" label="sel4_debugcapislastcopy"/> @endxmlonly

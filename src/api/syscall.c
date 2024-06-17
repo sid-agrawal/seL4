@@ -101,18 +101,6 @@ exception_t handleUnknownSyscall(word_t w)
         setRegister(NODE_STATE(ksCurThread), capRegister, cap_type);
         return EXCEPTION_NONE;
     }
-    if (w == SysDebugCapPaddr) {
-        word_t cptr = getRegister(NODE_STATE(ksCurThread), capRegister);
-        lookupCapAndSlot_ret_t lu_ret = lookupCapAndSlot(NODE_STATE(ksCurThread), cptr);
-
-        word_t cap_paddr = 0;
-        if (cap_get_capIsPhysical(lu_ret.cap)) {
-            cap_paddr = addrFromPPtr(cap_get_capPtr(lu_ret.cap));
-        } 
-
-        setRegister(NODE_STATE(ksCurThread), capRegister, cap_paddr);
-        return EXCEPTION_NONE;
-    }
     if (w == SysDebugCapIsLastCopy)
     {
         word_t cptr = getRegister(NODE_STATE(ksCurThread), capRegister);
@@ -634,7 +622,18 @@ exception_t handleSyscall(syscall_t syscall)
         case SysNBRecv:
             handleRecv(false, true);
             break;
+        case SysCapPaddr:
+            word_t cptr = getRegister(NODE_STATE(ksCurThread), capRegister);
+            lookupCapAndSlot_ret_t lu_ret = lookupCapAndSlot(NODE_STATE(ksCurThread), cptr);
 
+            word_t cap_paddr = 0;
+            if (cap_get_capIsPhysical(lu_ret.cap))
+            {
+                cap_paddr = addrFromPPtr(cap_get_capPtr(lu_ret.cap));
+            }
+
+            setRegister(NODE_STATE(ksCurThread), capRegister, cap_paddr);
+            break;
         case SysYield:
             handleYield();
             break;
