@@ -62,13 +62,6 @@ BOOT_CODE static bool_t arch_init_freemem(p_region_t ui_p_reg,
         index++;
     }
 
-    /* add the extra device region, if it is not empty */
-    if (extra_device_p_reg.start) {
-        reserved[index].start = (pptr_t) paddr_to_pptr(extra_device_p_reg.start);
-        reserved[index].end = (pptr_t) paddr_to_pptr(extra_device_p_reg.end);
-        index++;
-    }
-
     /* Reserve the user image region and the mode-reserved regions. For now,
      * only one mode-reserved region is supported, because this is all that is
      * needed.
@@ -89,7 +82,9 @@ BOOT_CODE static bool_t arch_init_freemem(p_region_t ui_p_reg,
                 reserved[index] = mode_reserved_region[0];
                 index++;
                 reserved[index] = ui_reg;
-            } else {
+            }
+            else
+            {
                 reserved[index] = ui_reg;
                 index++;
                 reserved[index] = mode_reserved_region[0];
@@ -101,6 +96,7 @@ BOOT_CODE static bool_t arch_init_freemem(p_region_t ui_p_reg,
                        "regions\n");
                 return false;
             }
+
             reserved[index] = ui_reg;
             index++;
         }
@@ -110,12 +106,24 @@ BOOT_CODE static bool_t arch_init_freemem(p_region_t ui_p_reg,
                 printf("ERROR: no slot to add the mode-reserved region\n");
                 return false;
             }
+
             reserved[index] = mode_reserved_region[0];
             index++;
         }
 
         /* Reserve the ui_p_reg region still so it doesn't get turned into device UT. */
         reserve_region(ui_p_reg);
+    }
+
+    /* add the extra device region, if it is not empty */
+    // (XXX) Linh: where are the values for this come from?
+    // why does it overlap with the user image?
+    // why is there no available region for it?
+    if (extra_device_p_reg.start)
+    {
+        reserved[index].start = (pptr_t)paddr_to_pptr(ui_p_reg.end);
+        reserved[index].end = (pptr_t)paddr_to_pptr(ui_p_reg.end + 1048576);
+        index++;
     }
 
     /* avail_p_regs comes from the auto-generated code */

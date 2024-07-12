@@ -142,7 +142,7 @@ if(KernelPlatformQEMUArmVirt)
                 # physical address space even on 32-bit systems, the 32-bit
                 # version of seL4 can access physical addresses in the 32-bit
                 # range only.
-                set(QEMU_MEMORY "1024")
+                set(QEMU_MEMORY "4096")
             endif()
 
             if(KernelMaxNumNodes)
