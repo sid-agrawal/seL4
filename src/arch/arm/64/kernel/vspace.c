@@ -712,14 +712,14 @@ static pte_t makeUserPagePTE(paddr_t paddr, vm_rights_t vm_rights, vm_attributes
 
 exception_t handleVMFault(tcb_t *thread, vm_fault_type_t vm_faultType)
 {
-    printf("Page fault in thread at PC %p\n", (void *)getRestartPC(thread));
+    // printf("Page fault in thread at PC %p\n", (void *)getRestartPC(thread));
     switch (vm_faultType) {
     case ARMDataAbort: {
         word_t addr, fault;
 
         addr = getFAR();
         fault = getDFSR();
-        printf("ARMDataAbort addr %p\n", (void *)addr);
+        // printf("ARMDataAbort addr %p\n", (void *)addr);
 #ifdef CONFIG_ARM_HYPERVISOR_SUPPORT
         /* use the IPA */
         if (ARCH_NODE_STATE(armHSVCPUActive)) {
