@@ -114,7 +114,7 @@ static inline void debug_printTCB(tcb_t *tcb)
     }
 
     word_t core = SMP_TERNARY(tcb->tcbAffinity, 0);
-    printf("%15s\t%p\t%20lu\t%lu", state, (void *) getRestartPC(tcb), tcb->tcbPriority, core);
+    printf("%15s\t%p\t%20lu\t%lu\t%p", state, (void *)getRestartPC(tcb), tcb->tcbPriority, core, NODE_STATE(tcb));
 #ifdef CONFIG_KERNEL_MCS
     printf("\t%lu", (word_t) thread_state_get_tcbInReleaseQueue(tcb->tcbState));
 #endif
@@ -124,8 +124,8 @@ static inline void debug_printTCB(tcb_t *tcb)
 static inline void debug_dumpScheduler(void)
 {
     printf("Dumping all tcbs!\n");
-    printf("Name                                    \tState          \tIP                  \t Prio \t Core%s\n",
-           config_set(CONFIG_KERNEL_MCS) ?  "\t InReleaseQueue" : "");
+    printf("Name                              \tState          \tIP                  \t Prio \t Core \t Thread PTR%s\n",
+           config_set(CONFIG_KERNEL_MCS) ? "\t InReleaseQueue" : "");
     printf("--------------------------------------------------------------------------------------\n");
     for (tcb_t *curr = NODE_STATE(ksDebugTCBs); curr != NULL; curr = TCB_PTR_DEBUG_PTR(curr)->tcbDebugNext) {
         debug_printTCB(curr);
