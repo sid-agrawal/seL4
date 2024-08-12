@@ -712,7 +712,11 @@ static pte_t makeUserPagePTE(paddr_t paddr, vm_rights_t vm_rights, vm_attributes
 
 exception_t handleVMFault(tcb_t *thread, vm_fault_type_t vm_faultType)
 {
-    printf("Page fault in thread %p at PC %p\n", NODE_STATE(thread), (void *)getRestartPC(thread));
+#ifdef CONFIG_DEBUG_BUILD
+    printf("Page fault in thread %p at PC %p\n", TCB_PTR_DEBUG_PTR(thread), (void *)getRestartPC(thread));
+#else
+    printf("Page fault at PC %p\n", (void *)getRestartPC(thread));
+#endif
     switch (vm_faultType) {
     case ARMDataAbort: {
         word_t addr, fault;

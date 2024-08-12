@@ -114,7 +114,7 @@ static inline void debug_printTCB(tcb_t *tcb)
     }
 
     word_t core = SMP_TERNARY(tcb->tcbAffinity, 0);
-    printf("%15s\t%p\t%20lu\t%lu\t%p", state, (void *)getRestartPC(tcb), tcb->tcbPriority, core, NODE_STATE(tcb));
+    printf("%15s\t%p\t%20lu\t%lu\t%p", state, (void *)getRestartPC(tcb), tcb->tcbPriority, core, TCB_PTR_DEBUG_PTR(tcb));
 #ifdef CONFIG_KERNEL_MCS
     printf("\t%lu", (word_t) thread_state_get_tcbInReleaseQueue(tcb->tcbState));
 #endif
