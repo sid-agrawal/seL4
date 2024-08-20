@@ -97,9 +97,12 @@ BOOT_CODE static void dist_init(void)
 
     /* group 0 for secure; group 1 for non-secure */
     for (i = 0; i < nirqs; i += 32) {
-        if (config_set(CONFIG_ARM_HYPERVISOR_SUPPORT) && !config_set(CONFIG_PLAT_QEMU_ARM_VIRT)) {
+        if (config_set(CONFIG_ARM_HYPERVISOR_SUPPORT))
+        {
             gic_dist->security[i >> 5] = 0xffffffff;
-        } else {
+        }
+        else
+        {
             gic_dist->security[i >> 5] = 0;
         }
     }
