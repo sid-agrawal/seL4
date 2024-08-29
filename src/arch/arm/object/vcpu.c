@@ -124,6 +124,8 @@ void VPPIEvent(irq_t irq)
 #endif
 
     if (ARCH_NODE_STATE(armHSVCPUActive)) {
+        // virq_t virq = get_gic_vcpu_ctrl_lr(irq);
+        printf("vppi!\n");
         maskInterrupt(true, irq);
         assert(irqVPPIEventIndex(irq) != VPPIEventIRQ_invalid);
         ARCH_NODE_STATE(armHSCurVCPU)->vppi_masked[irqVPPIEventIndex(irq)] = true;

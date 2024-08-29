@@ -111,7 +111,7 @@ void VISIBLE NORETURN c_handle_interrupt(void)
     ksKernelEntry.word = IRQT_TO_IRQ(getActiveIRQ());
     ksKernelEntry.core = CURRENT_CPU_INDEX();
 #endif
-
+    // printf("c_handle_interrup\n");
     handleInterruptEntry();
     restore_user_context();
 }

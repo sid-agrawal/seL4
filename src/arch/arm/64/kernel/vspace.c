@@ -713,7 +713,7 @@ static pte_t makeUserPagePTE(paddr_t paddr, vm_rights_t vm_rights, vm_attributes
 exception_t handleVMFault(tcb_t *thread, vm_fault_type_t vm_faultType)
 {
 #ifdef CONFIG_DEBUG_BUILD
-    printf("Page fault in thread %p at PC %p\n", TCB_PTR_DEBUG_PTR(thread), (void *)getRestartPC(thread));
+    // printf("Page fault in thread %p at PC %p\n", TCB_PTR_DEBUG_PTR(thread), (void *)getRestartPC(thread));
 #endif
     switch (vm_faultType) {
     case ARMDataAbort: {
@@ -722,7 +722,7 @@ exception_t handleVMFault(tcb_t *thread, vm_fault_type_t vm_faultType)
         addr = getFAR();
         fault = getDFSR();
 #ifdef CONFIG_DEBUG_BUILD
-        printf("ARMDataAbort addr %p\n", (void *)addr);
+        // printf("ARMDataAbort addr %p\n", (void *)addr);
 #endif
 #ifdef CONFIG_ARM_HYPERVISOR_SUPPORT
         /* use the IPA */
@@ -740,7 +740,7 @@ exception_t handleVMFault(tcb_t *thread, vm_fault_type_t vm_faultType)
         pc = getRestartPC(thread);
         fault = getIFSR();
 #ifdef CONFIG_DEBUG_BUILD
-        printf("ARMPrefetchAbort PC %p\n", (void *)pc);
+        // printf("ARMPrefetchAbort PC %p\n", (void *)pc);
 #endif
 #ifdef CONFIG_ARM_HYPERVISOR_SUPPORT
         if (ARCH_NODE_STATE(armHSVCPUActive)) {

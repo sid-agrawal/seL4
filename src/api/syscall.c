@@ -58,11 +58,25 @@ exception_t handleInterruptEntry(void)
 #ifdef CONFIG_KERNEL_MCS
     if (SMP_TERNARY(clh_is_self_in_queue(), 1)) {
 #endif
+        // printf("activateThread node: %p", TCB_PTR_DEBUG_PTR(NODE_STATE(ksCurThread)));
         schedule();
         activateThread();
 #ifdef CONFIG_KERNEL_MCS
     }
 #endif
+    enum irq_state istate = intStateIRQTable[IRQT_TO_IDX(irq)];
+    // printf("%d\n", istate);
+    if (istate == IRQReserved || istate == IRQTimer)
+    {
+        // printf("irq %d node (%p) state after scheduling: %llu\n", istate, TCB_PTR_DEBUG_PTR(NODE_STATE(ksCurThread)), thread_state_get_tsType(NODE_STATE(ksCurThread)->tcbState));
+        for (tcb_t *curr = NODE_STATE(ksDebugTCBs); curr != NULL; curr = TCB_PTR_DEBUG_PTR(curr)->tcbDebugNext)
+        {
+            if (curr->tcbPriority == 3)
+            {
+                debug_printTCB(curr);
+            }
+        }
+    }
 
     return EXCEPTION_NONE;
 }
@@ -524,15 +538,19 @@ exception_t handleSyscall(syscall_t syscall)
 {
     exception_t ret;
     irq_t irq;
+    // printf("syscall: ")
     MCS_DO_IF_BUDGET({
         switch (syscall)
         {
         case SysSend:
             ret = handleInvocation(false, true, false, false, getRegister(NODE_STATE(ksCurThread), capRegister));
-            if (unlikely(ret != EXCEPTION_NONE)) {
+            if (unlikely(ret != EXCEPTION_NONE))
+            {
                 mcsPreemptionPoint();
                 irq = getActiveIRQ();
-                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid)) {
+                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid))
+                {
+                    printf("irq from send\n");
                     handleInterrupt(irq);
                 }
             }
@@ -541,10 +559,13 @@ exception_t handleSyscall(syscall_t syscall)
 
         case SysNBSend:
             ret = handleInvocation(false, false, false, false, getRegister(NODE_STATE(ksCurThread), capRegister));
-            if (unlikely(ret != EXCEPTION_NONE)) {
+            if (unlikely(ret != EXCEPTION_NONE))
+            {
                 mcsPreemptionPoint();
                 irq = getActiveIRQ();
-                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid)) {
+                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid))
+                {
+                    printf("irq from nbsend\n");
                     handleInterrupt(irq);
                 }
             }
@@ -552,10 +573,14 @@ exception_t handleSyscall(syscall_t syscall)
 
         case SysCall:
             ret = handleInvocation(true, true, true, false, getRegister(NODE_STATE(ksCurThread), capRegister));
-            if (unlikely(ret != EXCEPTION_NONE)) {
+            if (unlikely(ret != EXCEPTION_NONE))
+            {
                 mcsPreemptionPoint();
                 irq = getActiveIRQ();
-                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid)) {
+                // printf("node %p calling\n", TCB_PTR_DEBUG_PTR(NODE_STATE(ksCurThread)));
+                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid))
+                {
+                    // printf("handling irq\n");
                     handleInterrupt(irq);
                 }
             }
@@ -582,7 +607,8 @@ exception_t handleSyscall(syscall_t syscall)
         case SysNBWait:
             handleRecv(false, false);
             break;
-        case SysReplyRecv: {
+        case SysReplyRecv:
+        {
             cptr_t reply = getRegister(NODE_STATE(ksCurThread), replyRegister);
             ret = handleInvocation(false, false, true, true, reply);
             /* reply cannot error and is not preemptible */
@@ -591,13 +617,16 @@ exception_t handleSyscall(syscall_t syscall)
             break;
         }
 
-        case SysNBSendRecv: {
+        case SysNBSendRecv:
+        {
             cptr_t dest = getNBSendRecvDest();
             ret = handleInvocation(false, false, true, true, dest);
-            if (unlikely(ret != EXCEPTION_NONE)) {
+            if (unlikely(ret != EXCEPTION_NONE))
+            {
                 mcsPreemptionPoint();
                 irq = getActiveIRQ();
-                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid)) {
+                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid))
+                {
                     handleInterrupt(irq);
                 }
                 break;
@@ -608,10 +637,12 @@ exception_t handleSyscall(syscall_t syscall)
 
         case SysNBSendWait:
             ret = handleInvocation(false, false, true, true, getRegister(NODE_STATE(ksCurThread), replyRegister));
-            if (unlikely(ret != EXCEPTION_NONE)) {
+            if (unlikely(ret != EXCEPTION_NONE))
+            {
                 mcsPreemptionPoint();
                 irq = getActiveIRQ();
-                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid)) {
+                if (IRQT_TO_IRQ(irq) != IRQT_TO_IRQ(irqInvalid))
+                {
                     handleInterrupt(irq);
                 }
                 break;
@@ -641,7 +672,6 @@ exception_t handleSyscall(syscall_t syscall)
         default:
             fail("Invalid syscall");
         }
-
     })
 
     schedule();
