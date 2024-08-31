@@ -712,7 +712,7 @@ static pte_t makeUserPagePTE(paddr_t paddr, vm_rights_t vm_rights, vm_attributes
 
 exception_t handleVMFault(tcb_t *thread, vm_fault_type_t vm_faultType)
 {
-#ifdef CONFIG_DEBUG_BUILD
+#if defined(CONFIG_DEBUG_BUILD) && !defined(CONFIG_PLAT_ODROIDC4)
     printf("Page fault in thread %p at PC %p\n", TCB_PTR_DEBUG_PTR(thread), (void *)getRestartPC(thread));
 #endif
     switch (vm_faultType) {
@@ -721,7 +721,7 @@ exception_t handleVMFault(tcb_t *thread, vm_fault_type_t vm_faultType)
 
         addr = getFAR();
         fault = getDFSR();
-#ifdef CONFIG_DEBUG_BUILD
+#if defined(CONFIG_DEBUG_BUILD) && !defined(CONFIG_PLAT_ODROIDC4)
         printf("ARMDataAbort addr %p\n", (void *)addr);
 #endif
 #ifdef CONFIG_ARM_HYPERVISOR_SUPPORT
