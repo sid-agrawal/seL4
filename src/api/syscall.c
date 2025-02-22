@@ -623,6 +623,7 @@ exception_t handleSyscall(syscall_t syscall)
             handleRecv(false, true);
             break;
         case SysCapPaddr:
+        {
             word_t cptr = getRegister(NODE_STATE(ksCurThread), capRegister);
             lookupCapAndSlot_ret_t lu_ret = lookupCapAndSlot(NODE_STATE(ksCurThread), cptr);
 
@@ -634,6 +635,7 @@ exception_t handleSyscall(syscall_t syscall)
 
             setRegister(NODE_STATE(ksCurThread), capRegister, cap_paddr);
             break;
+        }
         case SysYield:
             handleYield();
             break;
